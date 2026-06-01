@@ -8,6 +8,14 @@
 <body>
     <h1>My Digital Library</h1>
 
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
     <p>
         <a href="/add_author">Add Author</a> |
         <a href="/add_book">Add Book</a>
@@ -50,6 +58,13 @@
                 <p><strong>Author:</strong> {{ book.author.name }}</p>
                 <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
                 <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+
+                <form
+                    method="POST"
+                    action="{{ url_for('delete_book', book_id=book.id) }}"
+                >
+                    <button type="submit">Delete Book</button>
+                </form>
             </div>
 
             <hr>

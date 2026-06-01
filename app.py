@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime
 import os
 
 from data_models import db, Author, Book
 
 app = Flask(__name__)
+app.secret_key = "library-secret-key"
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -37,6 +38,23 @@ def home():
         books=books,
         search_query=search_query
     )
+
+
+@app.route("/book/<int:book_id>/delete", methods=["POST"])
+def delete_book(book_id):
+    book = Book.query.get_or_404(book_id)
+    author = book.author
+
+    db.session.delete(book)
+    db.session.commit()
+
+    if author and len(author.books) == 0:
+        db.session.delete(author)
+        db.session.commit()
+
+    flash("Book deleted successfully!")
+
+    return redirect(url_for("home"))
 
 
 @app.route("/add_author", methods=["GET", "POST"])
