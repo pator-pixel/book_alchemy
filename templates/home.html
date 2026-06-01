@@ -6,7 +6,6 @@
     <title>My Digital Library</title>
 </head>
 <body>
-
     <h1>My Digital Library</h1>
 
     <p>
@@ -15,6 +14,18 @@
     </p>
 
     <hr>
+
+    <form method="GET" action="/">
+        <label for="search">Search book:</label>
+        <input
+            type="text"
+            id="search"
+            name="search"
+            value="{{ search_query }}"
+            placeholder="Enter title"
+        >
+        <button type="submit">Search</button>
+    </form>
 
     <h3>Sort Books</h3>
 
@@ -29,7 +40,6 @@
     {% if books %}
         {% for book in books %}
             <div>
-
                 <img
                     src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
                     alt="Book Cover"
@@ -37,29 +47,15 @@
 
                 <h2>{{ book.title }}</h2>
 
-                <p>
-                    <strong>Author:</strong>
-                    {{ book.author.name }}
-                </p>
-
-                <p>
-                    <strong>Publication Year:</strong>
-                    {{ book.publication_year }}
-                </p>
-
-                <p>
-                    <strong>ISBN:</strong>
-                    {{ book.isbn }}
-                </p>
-
+                <p><strong>Author:</strong> {{ book.author.name }}</p>
+                <p><strong>Publication Year:</strong> {{ book.publication_year }}</p>
+                <p><strong>ISBN:</strong> {{ book.isbn }}</p>
             </div>
 
             <hr>
-
         {% endfor %}
     {% else %}
         <p>No books found.</p>
     {% endif %}
-
 </body>
 </html>

@@ -18,15 +18,25 @@ db.init_app(app)
 @app.route("/")
 def home():
     sort_by = request.args.get("sort", "title")
+    search_query = request.args.get("search", "")
+
+    query = Book.query
+
+    if search_query:
+        query = query.filter(Book.title.ilike(f"%{search_query}%"))
 
     if sort_by == "author":
-        books = Book.query.join(Author).order_by(Author.name).all()
+        books = query.join(Author).order_by(Author.name).all()
     elif sort_by == "year":
-        books = Book.query.order_by(Book.publication_year).all()
+        books = query.order_by(Book.publication_year).all()
     else:
-        books = Book.query.order_by(Book.title).all()
+        books = query.order_by(Book.title).all()
 
-    return render_template("home.html", books=books)
+    return render_template(
+        "home.html",
+        books=books,
+        search_query=search_query
+    )
 
 
 @app.route("/add_author", methods=["GET", "POST"])
@@ -42,7 +52,6 @@ def add_author():
         ).date()
 
         date_of_death_input = request.form.get("date_of_death")
-
         date_of_death = None
 
         if date_of_death_input:
@@ -62,28 +71,20 @@ def add_author():
 
         message = "Author added successfully!"
 
-    return render_template(
-        "add_author.html",
-        message=message
-    )
+    return render_template("add_author.html", message=message)
 
 
 @app.route("/add_book", methods=["GET", "POST"])
 def add_book():
     message = ""
-
     authors = Author.query.order_by(Author.name).all()
 
     if request.method == "POST":
         book = Book(
             isbn=request.form.get("isbn"),
             title=request.form.get("title"),
-            publication_year=int(
-                request.form.get("publication_year")
-            ),
-            author_id=int(
-                request.form.get("author_id")
-            )
+            publication_year=int(request.form.get("publication_year")),
+            author_id=int(request.form.get("author_id"))
         )
 
         db.session.add(book)
