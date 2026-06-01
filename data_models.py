@@ -11,6 +11,8 @@ class Author(db.Model):
     birth_date = db.Column(db.Date, nullable=False)
     date_of_death = db.Column(db.Date, nullable=True)
 
+    books = db.relationship("Book", back_populates="author")
+
     def __str__(self):
         return self.name
 
@@ -31,6 +33,8 @@ class Book(db.Model):
         db.ForeignKey("authors.id"),
         nullable=False
     )
+
+    author = db.relationship("Author", back_populates="books")
 
     def __str__(self):
         return self.title

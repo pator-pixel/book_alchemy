@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Digital Library</title>
+</head>
+<body>
+
+    <h1>My Digital Library</h1>
+
+    <p>
+        <a href="/add_author">Add Author</a> |
+        <a href="/add_book">Add Book</a>
+    </p>
+
+    <hr>
+
+    <h3>Sort Books</h3>
+
+    <p>
+        <a href="/?sort=title">Sort by Title</a> |
+        <a href="/?sort=author">Sort by Author</a> |
+        <a href="/?sort=year">Sort by Publication Year</a>
+    </p>
+
+    <hr>
+
+    {% if books %}
+        {% for book in books %}
+            <div>
+
+                <img
+                    src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                    alt="Book Cover"
+                >
+
+                <h2>{{ book.title }}</h2>
+
+                <p>
+                    <strong>Author:</strong>
+                    {{ book.author.name }}
+                </p>
+
+                <p>
+                    <strong>Publication Year:</strong>
+                    {{ book.publication_year }}
+                </p>
+
+                <p>
+                    <strong>ISBN:</strong>
+                    {{ book.isbn }}
+                </p>
+
+            </div>
+
+            <hr>
+
+        {% endfor %}
+    {% else %}
+        <p>No books found.</p>
+    {% endif %}
+
+</body>
+</html>
